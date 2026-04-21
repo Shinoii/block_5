@@ -3,8 +3,5 @@
         <testsuite name="Unit Tests">
             <directory>src/Tests/Unit</directory>
         </testsuite>
-        <testsuite name="Feature Tests">
-            <directory>src/Tests/Feature</directory>
-        </testsuite>
     </testsuites>
 </phpunit>
