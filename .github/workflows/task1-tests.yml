@@ -1,4 +1,4 @@
-name: Task 1 PHPUnit tests
+name: Task 1/2 PHPUnit tests
 
 on:
   push:
@@ -21,9 +21,9 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        working-directory: lesson_2/Task1
+        working-directory: lesson_2/Task1_2
         run: composer install --no-interaction --prefer-dist
 
       - name: Run tests
-        working-directory: lesson_2/Task1
+        working-directory: lesson_2/Task1_2
         run: vendor/bin/phpunit
