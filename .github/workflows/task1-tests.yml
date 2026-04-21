@@ -1,4 +1,4 @@
-name: Task1 PHPUnit tests
+name: Task 1 PHPUnit tests
 
 on:
   push:
