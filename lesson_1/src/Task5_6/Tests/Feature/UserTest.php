@@ -9,24 +9,30 @@ use PDO;
 
 class UserTest extends TestCase
 {
-    public function testUserApiReturnsUsers()
+    protected \PDO $pdo;
+    protected function setUp(): void
     {
-        $pdo = new \PDO('sqlite::memory:');
-        $pdo->exec("
+        $this->pdo = new \PDO('sqlite::memory:');
+
+        $this->pdo->exec("
             CREATE TABLE users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 email TEXT
             )
         ");
-        $pdo->exec("
-            INSERT INTO users (name, email) VALUES
-            ('John', 'john@example.com'),
-            ('Dmitry', 'dmitry@yandex.ru')
+        $this->pdo->exec("
+            INSERT INTO users (id, name, email) VALUES
+            (1, 'John', 'john@example.com'),
+            (2, 'Dmitry', 'dmitry@yandex.ru')
         ");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $userRepository = new MySQLUserRepository($pdo);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    }
+
+    public function testUserApiReturnsUsers()
+    {
+        $userRepository = new MySQLUserRepository($this->pdo);
         $userService = new UserService($userRepository);
         $userController = new UserController($userService);
 
