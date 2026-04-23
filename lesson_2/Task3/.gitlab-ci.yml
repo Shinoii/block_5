@@ -1,0 +1,15 @@
+stages:
+  - build
+  - test
+
+build-job:
+  stage: build
+  script:
+    - docker build -t lesson2-app .
+
+test-job:
+  stage: test
+  script:
+    - docker compose up -d
+    - docker compose exec -t php composer install --no-interaction
+    - docker compose exec -t php vendor/bin/phpunit
