@@ -1,4 +1,4 @@
-name: Task 1/2 PHPUnit tests
+name: Task 1/2 Настройка CI/CD в GitHub Actions && Автоматический запуск тестов в GitHub Actions
 
 on:
   push:

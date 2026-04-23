@@ -1,0 +1,17 @@
+{
+    "name": "block5/lesson_2",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Konstantin",
+            "email": "grigo.ko2004@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^13.1"
+    }
+}
