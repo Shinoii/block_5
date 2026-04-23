@@ -1,43 +1,62 @@
 <?php
 namespace App\Task5_6\Tests\Feature;
 
-use App\Task5_6\Controllers\UserController;
-use App\Task5_6\Repositories\MySQLUserRepository;
-use App\Task5_6\Services\UserService;
 use PHPUnit\Framework\TestCase;
-use PDO;
+use GuzzleHttp\Client;
 
 class UserTest extends TestCase
 {
     protected \PDO $pdo;
+
     protected function setUp(): void
     {
-        $this->pdo = new \PDO('sqlite::memory:');
+        $this->pdo = new \PDO(
+            'mysql:host=mysql;dbname=effective',
+            'user',
+            'user'
+        );
+
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $this->pdo->exec("
-            CREATE TABLE users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                email TEXT
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL
             )
         ");
+
         $this->pdo->exec("
             INSERT INTO users (id, name, email) VALUES
             (1, 'John', 'john@example.com'),
             (2, 'Dmitry', 'dmitry@yandex.ru')
         ");
+    }
 
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    protected function tearDown(): void
+    {
+        $this->pdo->exec("TRUNCATE TABLE users");
     }
 
     public function testUserApiReturnsUsers()
     {
-        $userRepository = new MySQLUserRepository($this->pdo);
-        $userService = new UserService($userRepository);
-        $userController = new UserController($userService);
+        $client = new Client([
+            'base_uri' => 'http://nginx:80',
+        ]);
 
-        $response = $userController->index();
+        $response = $client->get('/task5_6/users');
 
-        $this->assertCount(2, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = $response->getBody()->getContents();
+        $this->assertJson($body);
+
+        $data = json_decode($body, true);
+
+        $this->assertIsArray($data);
+        $this->assertCount(2, $data);
+
+        $this->assertEquals('John', $data[0]['name']);
+        $this->assertEquals('Dmitry', $data[1]['name']);
     }
 }

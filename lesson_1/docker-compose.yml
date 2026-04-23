@@ -28,8 +28,10 @@ services:
     environment:
       MYSQL_DATABASE: effective
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
     ports:
-      - "3307:3307"
+      - "3307:3306"
     networks:
       - app-network
 

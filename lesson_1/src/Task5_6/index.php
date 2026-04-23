@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 header('Content-Type: application/json');
 
-$pdo = new PDO('mysql:host=localhost;dbname=effective', 'root', 'Rfgbnjirf5891');
+$pdo = new \PDO('mysql:host=mysql;dbname=effective', 'user', 'user');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $userRepository = new MySQLUserRepository($pdo);
@@ -19,7 +19,10 @@ $userController = new UserController($userService);
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$uri = str_replace('/index.php', '', $uri);
+$basePath = '/task5_6';
+if (str_starts_with($uri, $basePath)) {
+    $uri = substr($uri, strlen($basePath));
+}
 
 if ($uri === '/users' && $method === 'GET') {
     echo json_encode($userController->index(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
